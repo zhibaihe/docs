@@ -1,6 +1,9 @@
 .logo{
     text-align:center;
 
+    border-bottom: 1px dashed #ccc;
+    padding-bottom:30px;
+
     & > a {
         display:inline-block;
         width: 32px;
@@ -14,6 +17,7 @@
         width:32px;
     }
 }
+
 .navigation{
     & > ul {
         list-style: none;
