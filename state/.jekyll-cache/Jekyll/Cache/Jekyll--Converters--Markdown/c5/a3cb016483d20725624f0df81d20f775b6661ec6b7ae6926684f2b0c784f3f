@@ -1,0 +1,55 @@
+I"O<p>Sometimes you may want to do some checking before a transition and allow or deny
+that transition conditionally. You can do exactly this with <code class="language-plaintext highlighter-rouge">State</code> using poilcies.</p>
+
+<p>To create a policy for your machine, simply extend the Zhibaihe\State\Policy class
+and pass an instance of your policy class to the <code class="language-plaintext highlighter-rouge">Machine</code> constructor as the third
+argument.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="kn">use</span> <span class="nc">Zhibaihe\State\Policy</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nc">OrderPolicy</span> <span class="kd">extends</span> <span class="nc">Policy</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Machine</span><span class="p">(</span><span class="s2">"..."</span><span class="p">,</span> <span class="s2">"..."</span><span class="p">,</span> <span class="nv">$policy</span><span class="p">);</span>
+<span class="cp">?&gt;</span></code></pre></figure>
+
+<p>Before each transition, the state machine will consult the policy by invoking a method
+named after the transition. It then proceeds only if that method call returns true.
+As an example:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="kd">class</span> <span class="nc">OrderPolicy</span> <span class="kd">extends</span> <span class="nc">Policy</span> <span class="p">{</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="n">pay</span><span class="p">(</span><span class="nv">$gateway</span><span class="p">){</span>
+        <span class="k">return</span> <span class="s1">'stripe'</span> <span class="o">==</span> <span class="nv">$gateway</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+<span class="mf">...</span>
+<span class="c1">// This transition will be denied,</span>
+<span class="c1">// machine state stays unchanged.</span>
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="n">state</span><span class="o">-&gt;</span><span class="nf">pay</span><span class="p">(</span><span class="s1">'paypal'</span><span class="p">);</span>
+
+<span class="c1">// This transition will be allowed,</span>
+<span class="c1">// machine state changed to 'payed'.</span>
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="n">state</span><span class="o">-&gt;</span><span class="nf">pay</span><span class="p">(</span><span class="s1">'stripe'</span><span class="p">);</span>
+<span class="cp">?&gt;</span></code></pre></figure>
+
+<p>Transitions not specified in the policy are allowed by default.
+If you prefer a safer policy scheme, override the <code class="language-plaintext highlighter-rouge">$denial</code> property on
+your policy class to <code class="language-plaintext highlighter-rouge">true</code>. That way, unspecified transitions are denied
+by default unless you explicitly allow them in your policy.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="kd">class</span> <span class="nc">OrderPolicy</span> <span class="kd">extends</span> <span class="nc">Policy</span> <span class="p">{</span>
+
+    <span class="k">protected</span> <span class="nv">$denial</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+    <span class="cm">/* your other code */</span>
+<span class="p">}</span>
+<span class="cp">?&gt;</span></code></pre></figure>
+
+<p>If no policy is specified upon machine instantiation, a policy allows
+all transitions will be used by default.</p>
+:ET

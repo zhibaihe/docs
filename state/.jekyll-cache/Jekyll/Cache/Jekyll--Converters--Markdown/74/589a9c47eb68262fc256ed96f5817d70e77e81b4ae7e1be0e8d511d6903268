@@ -1,0 +1,67 @@
+I"[<p><a href="https://travis-ci.org/zhibaihe/state"><img src="https://travis-ci.org/zhibaihe/state.svg?branch=master" alt="Build Status" /></a>
+<a href="https://packagist.org/packages/zhibaihe/state"><img src="https://poser.pugx.org/zhibaihe/state/downloads" alt="Total Downloads" /></a>
+<a href="https://packagist.org/packages/zhibaihe/state"><img src="https://poser.pugx.org/zhibaihe/state/v/stable" alt="Latest Stable Version" /></a>
+<a href="https://packagist.org/packages/zhibaihe/state"><img src="https://poser.pugx.org/zhibaihe/state/v/unstable" alt="Latest Unstable Version" /></a>
+<a href="https://packagist.org/packages/zhibaihe/state"><img src="https://poser.pugx.org/zhibaihe/state/license" alt="License" /></a></p>
+
+<p><code class="language-plaintext highlighter-rouge">State</code> is a state machine implementation in PHP.</p>
+
+<h2 id="install">Install</h2>
+
+<p>Pull <code class="language-plaintext highlighter-rouge">State</code> in from Composer:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="n">composer</span> <span class="k">require</span> <span class="n">zhibaihe</span><span class="o">/</span><span class="n">state</span> <span class="o">^</span><span class="mf">1.3</span></code></pre></figure>
+
+<h2 id="create-a-state-machine">Create a state machine</h2>
+
+<p>Creating a state machine with <code class="language-plaintext highlighter-rouge">State</code> is a cinch. Just pass a <code class="language-plaintext highlighter-rouge">machine spec</code>, which
+is a specially formatted string description, to the machine into the constructor,
+like the following:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="kn">use</span> <span class="nc">Zhibaihe\State\Machine</span><span class="p">;</span>
+
+<span class="mf">...</span>
+
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Machine</span><span class="p">(</span><span class="s2">"states: placed, payed, shipped, completed
+               - pay:      placed  &gt; payed
+               - ship:     payed   &gt; shipped
+               - complete: shipped &gt; completed"</span><span class="p">);</span>
+<span class="cp">?&gt;</span></code></pre></figure>
+
+<p>The <code class="language-plaintext highlighter-rouge">machine spec</code> starts with one line enumerating all states, namely <code class="language-plaintext highlighter-rouge">placed</code>,
+<code class="language-plaintext highlighter-rouge">payed</code>, <code class="language-plaintext highlighter-rouge">shipped</code> and <code class="language-plaintext highlighter-rouge">completed</code>. The first state (<code class="language-plaintext highlighter-rouge">placed</code>) will be treated
+as the initial state.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="n">states</span><span class="o">:</span> <span class="n">placed</span><span class="p">,</span> <span class="n">payed</span><span class="p">,</span> <span class="n">shipped</span><span class="p">,</span> <span class="n">completed</span></code></pre></figure>
+
+<p>Following the states line, subsequent lines each describes one possible
+transition. E.g.:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="o">-</span> <span class="n">pay</span><span class="o">:</span> <span class="n">placed</span>  <span class="o">&gt;</span> <span class="n">payed</span></code></pre></figure>
+
+<p>The above line defines a transition named <code class="language-plaintext highlighter-rouge">pay</code> that changes the state of the machine
+from <code class="language-plaintext highlighter-rouge">placed</code> to <code class="language-plaintext highlighter-rouge">payed</code>.</p>
+
+<p>You can provide an optional second argument to the constructor to indicate the
+current state of the machine.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Machine</span><span class="p">(</span><span class="s2">"..."</span><span class="p">,</span> <span class="s2">"payed"</span><span class="p">);</span> <span class="c1">// machine set to 'payed' state</span>
+<span class="cp">?&gt;</span></code></pre></figure>
+
+<h2 id="teleporting">Teleporting</h2>
+
+<p>A <code class="language-plaintext highlighter-rouge">teleport()</code> method is at your disposal if you would like to set the machine
+to a specific state after instantiation.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="n">state</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Machine</span><span class="p">(</span><span class="s2">"..."</span><span class="p">);</span> <span class="c1">// machine already instantiated</span>
+<span class="mf">...</span>
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="nf">teleport</span><span class="p">(</span><span class="s2">"shipped"</span><span class="p">);</span> <span class="c1">// machine set to 'shipped' state</span>
+<span class="cp">?&gt;</span></code></pre></figure>
+
+<p>Note that the <code class="language-plaintext highlighter-rouge">teleport()</code> method does nothing but setting the machine state. None
+of the transition listeners will be called since no transition is performed.
+What happened here is a <em>teleport</em>! :P</p>
+:ET

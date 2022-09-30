@@ -1,0 +1,38 @@
+I"c<p>State machines are no good if you cannot monitor their state to do something about it.
+With <code class="language-plaintext highlighter-rouge">State</code>, you can register transition listeners quite easily. Just attach a
+<a href="http://php.net/manual/en/language.types.callable.php">callable</a> to the transition
+you want to monitor:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="n">state</span><span class="o">-&gt;</span><span class="nf">on</span><span class="p">(</span><span class="s1">'pay'</span><span class="p">,</span> <span class="p">[</span><span class="nv">$order</span><span class="p">,</span> <span class="s1">'addPayment'</span><span class="p">]);</span>
+<span class="cp">?&gt;</span></code></pre></figure>
+
+<p>This will trigger the <code class="language-plaintext highlighter-rouge">addPayment()</code> method on <code class="language-plaintext highlighter-rouge">$order</code> whenever the <code class="language-plaintext highlighter-rouge">pay</code> transition is
+performed. The listener should have the following signature:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="n">transitionListener</span><span class="p">(</span><span class="nv">$from</span><span class="p">,</span> <span class="nv">$to</span><span class="p">,</span> <span class="nv">$arg1</span><span class="p">,</span> <span class="nv">$arg2</span><span class="p">,</span> <span class="nv">$arg3</span> <span class="p">...);</span>
+<span class="cp">?&gt;</span></code></pre></figure>
+
+<p>It accepts a <code class="language-plaintext highlighter-rouge">$from</code> state, a <code class="language-plaintext highlighter-rouge">$to</code> state and all
+transition parameters you specified when calling the <code class="language-plaintext highlighter-rouge">process()</code> method or
+transition methods.</p>
+
+<p>Sometimes you may want to monitor all transitions of a given state machine. This
+is especially useful for logging purposes (e.g. keeping a state transition log
+for orders of your e-commerce system). In this case, you can register a
+<code class="language-plaintext highlighter-rouge">global listener</code> by omitting the <code class="language-plaintext highlighter-rouge">$transition</code> parameter to the <code class="language-plaintext highlighter-rouge">on()</code> call:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="n">state</span><span class="o">-&gt;</span><span class="nf">on</span><span class="p">([</span><span class="nv">$order</span><span class="p">,</span> <span class="s1">'logging'</span><span class="p">]);</span>
+<span class="cp">?&gt;</span></code></pre></figure>
+
+<p>The <code class="language-plaintext highlighter-rouge">logging()</code> method of <code class="language-plaintext highlighter-rouge">$order</code> will be called when any state transition happens
+within the machine. It accepts the <code class="language-plaintext highlighter-rouge">$transition</code> name, a <code class="language-plaintext highlighter-rouge">$from</code> state, a <code class="language-plaintext highlighter-rouge">$to</code>
+state, and an array of transition parameters.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">function</span> <span class="n">logging</span><span class="p">(</span><span class="nv">$transition</span><span class="p">,</span> <span class="nv">$from</span><span class="p">,</span> <span class="nv">$to</span><span class="p">,</span> <span class="nv">$parameters</span><span class="p">)</span>
+<span class="cp">?&gt;</span></code></pre></figure>
+
+:ET

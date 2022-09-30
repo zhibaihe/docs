@@ -1,0 +1,26 @@
+I"Å	<p>To perform a transition on a state machine, simply call a function with the name of the transition you specified in the <code class="language-plaintext highlighter-rouge">machine spec</code>. For example:</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="n">state</span><span class="o">-&gt;</span><span class="nf">pay</span><span class="p">();</span>
+<span class="cp">?&gt;</span></code></pre></figure>
+
+<p>This will perform the <code class="language-plaintext highlighter-rouge">pay</code> transition and bring the state of the machine from <code class="language-plaintext highlighter-rouge">placed</code>
+to <code class="language-plaintext highlighter-rouge">payed</code>.</p>
+
+<p>These <code class="language-plaintext highlighter-rouge">transition functions</code> accept parameters, which will be passed to <a href="/state/monitoring">Transition Monitors</a> for processing.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="n">state</span><span class="o">-&gt;</span><span class="nf">pay</span><span class="p">(</span><span class="nv">$gateway</span><span class="p">,</span> <span class="nv">$reference</span><span class="p">,</span> <span class="nv">$notes</span><span class="p">);</span>
+<span class="cp">?&gt;</span></code></pre></figure>
+
+<p>Alternatively, you can call the <code class="language-plaintext highlighter-rouge">process()</code> method and specify the desired transition name.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="n">state</span><span class="o">-&gt;</span><span class="nf">process</span><span class="p">(</span><span class="s1">'pay'</span><span class="p">);</span>
+
+<span class="c1">// or with parameters</span>
+
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="n">state</span><span class="o">-&gt;</span><span class="nf">process</span><span class="p">(</span><span class="s1">'pay'</span><span class="p">,</span> <span class="nv">$gateway</span><span class="p">,</span> <span class="nv">$reference</span><span class="p">,</span> <span class="nv">$notes</span><span class="p">);</span>
+<span class="cp">?&gt;</span></code></pre></figure>
+
+:ET

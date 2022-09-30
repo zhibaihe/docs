@@ -1,0 +1,42 @@
+I"ý<p>Instead of registering transition listeners for each individual transition separately,
+you can provide an object as the machine <code class="language-plaintext highlighter-rouge">walker</code>, which walks along the edges between
+states. When a transition is performed, the method named after that transition on the
+<code class="language-plaintext highlighter-rouge">walker</code> object will be triggered, just like a transition listener.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="kd">class</span> <span class="nc">OrderWalker</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">pay</span><span class="p">(</span><span class="nv">$from</span><span class="p">,</span> <span class="nv">$to</span><span class="p">,</span> <span class="nv">$gateway</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// do something here.</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="n">state</span><span class="o">-&gt;</span><span class="nf">attach</span><span class="p">(</span><span class="k">new</span> <span class="nc">OrderWalker</span><span class="p">);</span> <span class="c1">// attach the walker</span>
+
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="n">state</span><span class="o">-&gt;</span><span class="nf">pay</span><span class="p">(</span><span class="s1">'stripe'</span><span class="p">);</span> <span class="c1">// OrderWalker::pay() gets called</span>
+<span class="cp">?&gt;</span></code></pre></figure>
+
+<p>The <code class="language-plaintext highlighter-rouge">attach()</code> method is used to associate a <code class="language-plaintext highlighter-rouge">walker</code> with the state machine.
+You can define an optional <code class="language-plaintext highlighter-rouge">_catchall_()</code> method on your <code class="language-plaintext highlighter-rouge">walker</code> object to
+monitor those transitions you didnâ€™t explicitly catch through a method.</p>
+
+<figure class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="kd">class</span> <span class="nc">OrderWalker</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="n">pay</span><span class="p">(</span><span class="nv">$from</span><span class="p">,</span> <span class="nv">$to</span><span class="p">,</span> <span class="nv">$gateway</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// do something here.</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="n">_catchall_</span><span class="p">(</span><span class="nv">$transition</span><span class="p">,</span> <span class="nv">$from</span><span class="p">,</span> <span class="nv">$to</span><span class="p">,</span> <span class="kt">array</span> <span class="nv">$parameters</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// transitions without a corresponding method will</span>
+        <span class="c1">// get passed to this one</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="n">state</span><span class="o">-&gt;</span><span class="nf">attach</span><span class="p">(</span><span class="k">new</span> <span class="nc">OrderWalker</span><span class="p">);</span> <span class="c1">// attach the walker</span>
+
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="n">state</span><span class="o">-&gt;</span><span class="nf">pay</span><span class="p">(</span><span class="s1">'stripe'</span><span class="p">);</span> <span class="c1">// OrderWalker::pay() gets called</span>
+
+<span class="nv">$order</span><span class="o">-&gt;</span><span class="n">state</span><span class="o">-&gt;</span><span class="nf">ship</span><span class="p">();</span> <span class="c1">// OrderWalker::_catchall_() gets called</span>
+<span class="cp">?&gt;</span></code></pre></figure>
+
+<p>The <code class="language-plaintext highlighter-rouge">_catchall_()</code> method follows the same signature of global listeners.</p>
+:ET
